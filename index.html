@@ -3,172 +3,130 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Poll Siêu Năng Lực Ngộ Nghĩnh ✨</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <title>Ai Là Siêu Anh Hùng Lớp Mình?</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.8.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.8.2/firebase-database-compat.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
 
-    * { box-sizing: border-box; }
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Fredoka', cursive;
-      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      font-family: 'Baloo 2', sans-serif;
+      background: linear-gradient(135deg, #a29bfe 0%, #ffeaa7 100%);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #333;
+      padding: 15px 10px;
+      text-align: center;
     }
     .container {
-      max-width: 900px;
-      margin: 20px;
+      max-width: 520px;
+      margin: 0 auto;
       background: white;
       border-radius: 30px;
       padding: 30px 20px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-      text-align: center;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
     }
     h1 {
-      font-size: 3em;
-      margin: 0 0 20px;
-      color: #ff6b6b;
-      text-shadow: 3px 3px 0px #ffb6c6;
+      font-size: 2.8em;
+      margin: 10px 0 15px;
+      color: #6c5ce7;
+      text-shadow: 3px 3px 0px #fd79a8;
+    }
+    .subtitle {
+      font-size: 1.55em;
+      margin-bottom: 25px;
+      color: #e84393;
+      line-height: 1.4;
     }
     #timer {
-      font-size: 2.8em;
-      font-weight: 700;
-      margin: 20px 0;
-      background: #fff0f0;
-      border-radius: 20px;
-      padding: 15px;
-      display: inline-block;
-      transition: all 0.5s;
-    }
-    #timer.urgent {
-      color: #ff4757;
-      animation: blink 1s infinite;
-      transform: scale(1.1);
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-    .options {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      margin: 30px 0;
-    }
-    .option {
-      background: #fff;
-      border-radius: 25px;
-      padding: 30px 20px;
-      cursor: pointer;
-      transition: all 0.4s ease;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      font-weight: 600;
-      font-size: 1.4em;
-      color: white;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    .option:hover {
-      transform: translateY(-15px) scale(1.05);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    }
-    .option.selected {
-      transform: scale(1.15);
-      box-shadow: 0 0 30px #ffd700, 0 0 60px #ff0;
-      animation: pulse 2s infinite;
-    }
-    .option.disabled {
-      opacity: 0.5;
-      pointer-events: none;
-      filter: grayscale(80%);
-    }
-    .emoji {
       font-size: 5em;
-      display: block;
-      margin-bottom: 15px;
+      font-weight: 800;
+      color: #d63031;
+      background: #fff0f0;
+      padding: 15px;
+      border-radius: 25px;
+      margin: 20px 0;
+    }
+    #timer.urgent { animation: blink 0.8s infinite; }
+    @keyframes blink { 50% { opacity: 0.5; } }
+
+    .options { display: flex; flex-direction: column; gap: 18px; margin: 30px 0; }
+    .option {
+      background: #ddd;
+      border-radius: 28px;
+      padding: 30px 15px;
+      cursor: pointer;
+      font-size: 1.8em;
+      font-weight: 700;
+      color: white;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+      transition: all 0.3s;
+    }
+    .option:hover { transform: translateY(-10px) scale(1.04); }
+    .option:active { transform: scale(0.96); }
+    .option.selected {
+      transform: scale(1.08);
+      box-shadow: 0 0 50px #ffd700, 0 0 100px #ff0 !important;
+      animation: pulse 1.5s infinite;
+    }
+    .option.disabled { opacity: 0.35; pointer-events: none; filter: grayscale(90%); }
+    .nickname {
+      font-size: 0.75em;
+      opacity: 0.95;
+      margin-top: 6px;
+      font-weight: 600;
     }
     #message {
-      font-size: 1.8em;
-      margin: 30px 0;
-      min-height: 60px;
+      font-size: 1.9em;
+      min-height: 70px;
+      padding: 15px;
+      background: #fff3cd;
+      border-radius: 20px;
+      margin: 20px 0;
+      color: #e17055;
+      font-weight: 700;
     }
-    .result-card {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    .result-item {
+      background: linear-gradient(135deg, #74b9ff, #0984e3);
       color: white;
+      margin: 18px 0;
+      padding: 22px;
       border-radius: 25px;
-      padding: 30px;
-      margin: 25px auto;
-      max-width: 700px;
       display: flex;
       align-items: center;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-      animation: slideUp 0.8s ease;
+      font-size: 1.7em;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.3);
     }
-    .rank {
-      font-size: 6em;
-      margin-right: 30px;
-    }
-    .result-card .emoji {
-      font-size: 4.5em;
-      margin: 0 20px;
-    }
-    .info h3 {
-      font-size: 2em;
-      margin: 0 0 10px;
-    }
-    .progress {
-      width: 100%;
-      height: 40px;
-      background: rgba(255,255,255,0.3);
-      border-radius: 20px;
-      overflow: hidden;
-      margin-top: 15px;
-    }
-    .progress-bar {
-      height: 100%;
-      border-radius: 20px;
-      transition: width 1.5s ease;
-    }
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(255,215,0,0.8); }
-      70% { box-shadow: 0 0 0 30px rgba(255,215,0,0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,215,0,0); }
-    }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(50px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    #full-results {
-      margin-top: 50px;
-      font-size: 1.3em;
-    }
+    .rank { font-size: 4.5em; margin-right: 20px; }
+    .progress { height: 35px; background: rgba(255,255,255,0.3); border-radius: 20px; overflow: hidden; margin-top: 12px; }
+    .bar { height: 100%; background: #fff; border-radius: 20px; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,215,0,0.8); } 70% { box-shadow: 0 0 0 40px rgba(255,215,0,0); } }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🌟 BẠN MUỐN CÓ SIÊU NĂNG LỰC NÀO NHẤT?🌟</h1>
-     <button id="resetBtn" style="display:none; background:#ff4757; color:white; border:none; padding:15px 30px; font-size:1.3em; border-radius:15px; cursor:pointer; margin:10px;">
-    RESET TOÀN BỘ POLL (chỉ cô/thầy bấm)
-  </button>
-    <div id="timer">Thời gian còn lại: <span id="time">02:00</span></div>
-    <div id="message"></div>
+    <h1>AI LÀ SIÊU ANH HÙNG LỚP MÌNH?</h1>
+    <div class="subtitle">Bấm vào tên bạn mà bạn tin có siêu năng lực bí mật!</div>
+
+    <button id="resetBtn" style="display:none;background:#e17055;color:white;border:none;padding:15px 30px;font-size:1.5em;border-radius:20px;margin:15px;">
+      RESET POLL (Chỉ cô/thầy)
+    </button>
+
+    <div id="timer">02:00</div>
+    <div id="message">Chọn ngay một người nào!</div>
+
     <div id="poll" class="options"></div>
+
     <div id="results" style="display:none;">
-      <h2 style="font-size:3em;color:#ffd700;text-shadow:3px 3px #ff69b4">🏆 TOP 3 SIÊU NĂNG LỰC 🏆</h2>
-      <div id="top3"></div>
-      <p>Tổng cộng: <span id="total-votes">0</span> lượt vote</p>
+      <h2 style="font-size:3.2em;color:#f1c40f;margin:30px 0">BẢNG VÀNG SIÊU ANH HÙNG</h2>
+      <div id="ranking"></div>
+      <p style="font-size:1.8em;margin-top:25px">Tổng cộng <b id="total-votes">0</b> bạn đã vote</p>
     </div>
   </div>
 
   <script>
-    // === ĐIỀU CHỈNH Ở ĐÂY - DÁN CONFIG FIREBASE VÀO ĐÂY
     const firebaseConfig = {
       apiKey: "AIzaSyAQB47nB58LyMQ1_5DZSCggJK5AhBy-POE",
       authDomain: "poll-sieu-nang-luc.firebaseapp.com",
@@ -176,188 +134,163 @@
       projectId: "poll-sieu-nang-luc",
       storageBucket: "poll-sieu-nang-luc.firebasestorage.app",
       messagingSenderId: "743139357944",
-      appId: "1:743139357944:web:92fe5cfc03d4414e5e370d",
-      measurementId: "G-JQWYJL7GWL"
+      appId: "1:743139357944:web:92fe5cfc03d4414e5e370d"
     };
-    // ==========================================================
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    const pollRef = db.ref('poll-sieu-nang-luc-2025'); // có thể đổi tên để tạo poll mới
-
+    const pollRef = db.ref('sieunangluc-tenhocsinh-2025');
     const votesRef = pollRef.child('votes');
     const endTimeRef = pollRef.child('endTime');
+    const duration = 120; // 2 phút
 
-    const duration = 10; // 120 giây = 2 phút (bạn có thể đổi thành 300 nếu muốn 5 phút)
-
-    const options = [
-      { id: 0, text: "Bay lượn tự do", emoji: "🦅", color: "#87CEEB" },
-      { id: 1, text: "Tàng hình", emoji: "👻", color: "#C71585" },
-      { id: 2, text: "Đọc suy nghĩ", emoji: "🧠", color: "#FFB6C1" },
-      { id: 3, text: "Siêu sức mạnh", emoji: "💪", color: "#FF4500" },
-      { id: 4, text: "Du hành thời gian", emoji: "⏳", color: "#FFD700" },
-      { id: 5, text: "Nói chuyện với động vật", emoji: "🐾", color: "#98FB98" }
+    // 30 học sinh – TÊN TRƯỚC, BIỆT DANH SAU
+    const students = [
+      {id:0,  name:"Minh Khang",    nickname:"Cậu Bé Tia Chớp",      color:"#74b9ff"},
+      {id:1,  name:"Bảo Châu",     nickname:"Phù Thủy Phép Thuật",   color:"#fd79a8"},
+      {id:2,  name:"Phương Nam",   nickname:"Siêu Nhân Mặt Trời",    color:"#f1c40f"},
+      {id:3,  name:"Ngọc Ánh",     nickname:"Công Chúa Băng Giá",    color:"#81ecec"},
+      {id:4,  name:"Tuấn Kiệt",    nickname:"Siêu Nhân Cơ Bắp",      color:"#e17055"},
+      {id:5,  name:"Hải Đăng",     nickname:"Người Dẫn Đường",       color:"#00b894"},
+      {id:6,  name:"Thảo Vy",      nickname:"Nữ Hoàng Hoa",          color:"#ff7675"},
+      {id:7,  name:"Khánh Linh",   nickname:"Thiên Thần Nhỏ",        color:"#a29bfe"},
+      {id:8,  name:"Trí Đức",      nickname:"Thần Đồng Não Bộ",      color:"#6c5ce7"},
+      {id:9,  name:"Yến Nhi",      nickname:"Phượng Hoàng Lửa",      color:"#fdcb6e"},
+      {id:10, name:"Hoàng Long",   nickname:"Rồng Vàng Bay",         color:"#e84393"},
+      {id:11, name:"Mai Anh",      nickname:"Bướm Tiên Nữ",          color:"#fd79a8"},
+      {id:12, name:"Đức Huy",      nickname:"Hiệp Sĩ Ánh Sáng",      color:"#0984e3"},
+      {id:13, name:"Thùy Linh",    nickname:"Tiên Nữ Gió",           color:"#00cec9"},
+      {id:14, name:"Phong",        nickname:"Thần Gió Lốc",          color:"#636e72"},
+      {id:15, name:"Hồng Ngọc",    nickname:"Nữ Hoàng Lửa",          color:"#d63031"},
+      {id:16, name:"Quốc Bảo",     nickname:"Người Bảo Vệ Lớp",      color:"#2d3436"},
+      {id:17, name:"Kim Ngân",     nickname:"Công Chúa Bạc",         color:"#b2bec3"},
+      {id:18, name:"Việt Hoàng",   nickname:"Vua Chiến Binh",        color:"#e17055"},
+      {id:19, name:"Lan Chi",      nickname:"Hoa Lan Tiên Tử",       color:"#ff7675"},
+      {id:20, name:"Minh Tuấn",    nickname:"Tia Sét Siêu Tốc",      color:"#74b9ff"},
+      {id:21, name:"Thảo Nguyên",  nickname:"Nữ Hoàng Thảo Nguyên",  color:"#00b894"},
+      {id:22, name:"Hà My",       nickname:"Nàng Tiên Cá",          color:"#81ecec"},
+      {id:23, name:"Trọng Nghĩa",  nickname:"Hiệp Sĩ Công Lý",       color:"#2ecc71"},
+      {id:24, name:"Diệu Linh",    nickname:"Tiên Nữ Ánh Trăng",     color:"#a29bfe"},
+      {id:25, name:"Khánh An",     nickname:"Thiên Thần Bình Yên",   color:"#fdcb6e"},
+      {id:26, name:"Tùng Lâm",     nickname:"Người Gác Rừng",        color:"#55a3ff"},
+      {id:27, name:"Bích Thủy",    nickname:"Nàng Tiên Nước",        color:"#00cec9"},
+      {id:28, name:"Nhật Minh",    nickname:"Mặt Trời Bé Nhỏ",       color:"#f1cCounts40f"},
+      {id:29, name:"Cát Tường",    nickname:"Phù Thủy May Mắn",      color:"#e84393"}
     ];
 
     let endTime = null;
     let votes = {};
-    let timer;
     const pollDiv = document.getElementById('poll');
-    const timeSpan = document.getElementById('time');
     const timerDiv = document.getElementById('timer');
     const messageDiv = document.getElementById('message');
-    const resultsDiv = document.getElementById('results');
-    const top3Div = document.getElementById('top3');
-    const totalVotesSpan = document.getElementById('total-votes');
+    const rankingDiv = document.getElementById('ranking');
+    const totalSpan = document.getElementById('total-votes');
 
-    const hasVoted = localStorage.getItem('poll_hasVoted') === 'true';
-    const votedId = localStorage.getItem('poll_votedId');
-
-    // Tạo các ô lựa chọn
-    options.forEach(opt => {
+    // Tạo các ô vote: Tên lớn trước – biệt danh nhỏ sau
+    students.forEach(s => {
       const div = document.createElement('div');
       div.className = 'option';
-      div.dataset.id = opt.id;
-      div.style.background = opt.color;
-      div.innerHTML = `<span class="emoji">${opt.emoji}</span><div>${opt.text}</div>`;
-      div.onclick = () => vote(opt.id);
+      div.dataset.id = s.id;
+      div.style.background = s.color;
+      div.innerHTML = `
+        <div>${s.name}</div>
+        <div class="nickname">${s.nickname}</div>
+      `;
+      div.onclick = () => vote(s.id);
       pollDiv.appendChild(div);
     });
 
-    // Nếu đã vote rồi thì highlight ô đã chọn
-    if (hasVoted && votedId !== null) {
+    // Kiểm tra đã vote chưa
+    if (localStorage.getItem('voted_ten_2025') === 'yes') {
+      const chosen = localStorage.getItem('choice_ten_2025');
       document.querySelectorAll('.option').forEach(d => {
-        if (d.dataset.id == votedId) d.classList.add('selected');
+        if (d.dataset.id == chosen) d.classList.add('selected');
         else d.classList.add('disabled');
       });
-      messageDiv.innerHTML = '❤️ Bạn đã vote rồi nha! Chờ kết quả thui nào~ ❤️';
+      messageDiv.innerHTML = `Bạn đã vote cho <b>${students[chosen].name}</b> rồi nha!`;
     }
 
-    // Lấy endTime (nếu chưa có thì tạo)
-    endTimeRef.once('value').then(snap => {
-      if (!snap.val()) {
-        endTimeRef.set(Date.now() + duration * 1000);
-      }
-    });
-
-    // Theo dõi thời gian kết thúc & votes realtime
     endTimeRef.on('value', snap => {
       endTime = snap.val();
-      if (endTime && Date.now() > endTime) {
-        showResults();
-      } else {
-        startTimer();
-      }
+      if (endTime && Date.now() > endTime) showResults();
+      else updateTimer();
     });
 
     votesRef.on('value', snap => {
-      const data = snap.val() || {};
-      options.forEach(opt => {
-        votes[opt.id] = data[opt.id] || 0;
-      });
+      votes = snap.val() || {};
       if (Date.now() > endTime) showResults();
     });
 
     function vote(id) {
-      if (hasVoted || !endTime || Date.now() > endTime) {
-        return;
-      }
+      if (localStorage.getItem('voted_ten_2025') === 'yes' || (endTime && Date.now() > endTime)) return;
 
-      votesRef.child(id).transaction(val => (val || 0) + 1);
-      localStorage.setItem('poll_hasVoted', 'true');
-      localStorage.setItem('poll_votedId', id);
+      votesRef.child(id).transaction(v => (v||0)+1);
+      localStorage.setItem('voted_ten_2025','yes');
+      localStorage.setItem('choice_ten_2025',id);
 
-      messageDiv.innerHTML = '🎉 Vote thành công! Siêu đỉnh luôn áaaa 🎉';
-      confetti({ particleCount: 150, spread: 100 });
+      messageDiv.innerHTML = `Vote cho <b>${students[id].name}</b> thành công!`;
+      confetti({particleCount:250, spread:100});
+      new Audio('https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3').play().catch(()=>{});
 
       document.querySelectorAll('.option').forEach(d => {
-        if (d.dataset.id == id) {
-          d.classList.add('selected');
-        } else {
-          d.classList.add('disabled');
-        }
+        if (d.dataset.id == id) d.classList.add('selected');
+        else d.classList.add('disabled');
       });
     }
 
-    function startTimer() {
-      clearInterval(timer);
-      timer = setInterval(() => {
-        if (!endTime) return;
-        const remaining = Math.max(0, endTime - Date.now()) / 1000;
-        const m = String(Math.floor(remaining / 60)).padStart(2, '0');
-        const s = String(Math.floor(remaining % 60)).padStart(2, '0');
-        timeSpan.textContent = `${m}:${s}`;
-
-        if (remaining <= 0) {
-          clearInterval(timer);
-          showResults();
-        } else if (remaining < 11) {
-          timerDiv.classList.add('urgent');
-        } else {
-          timerDiv.classList.remove('urgent');
-        }
-      }, 500);
+    function updateTimer() {
+      const left = Math.max(0, (endTime - Date.now())/1000);
+      const m = String(Math.floor(left/60)).padStart(2,'0');
+      const s = String(Math.floor(left%60)).padStart(2,'0');
+      timerDiv.textContent = `${m}:${s}`;
+      timerDiv.classList.toggle('urgent', left < 11);
+      if (left > 0) setTimeout(updateTimer, 500);
     }
 
     function showResults() {
-      clearInterval(timer);
-      pollDiv.style.display = 'none';
-      timerDiv.style.display = 'none';
-      messageDiv.style.display = 'none';
-      resultsDiv.style.display = 'block';
+      document.getElementById('poll').style.display='none';
+      timerDiv.style.display='none';
+      messageDiv.style.display='none';
+      document.getElementById('results').style.display='block';
 
-      const total = Object.values(votes).reduce((a, b) => a + b, 0);
-      totalVotesSpan.textContent = total;
+      const total = Object.values(votes).reduce((a,b)=>a+b,0);
+      totalSpan.textContent = total;
 
-      const sorted = options.map(opt => ({
-        ...opt,
-        votes: votes[opt.id] || 0,
-        percent: total > 0 ? (votes[opt.id] || 0) / total * 100 : 0
-      })).sort((a, b) => b.votes - a.votes || a.id - b.id);
+      const sorted = students.map(s => ({
+        ...s,
+        votes: votes[s.id]||0,
+        percent: total ? (votes[s.id]||0)/total*100 : 0
+      })).sort((a,b)=> b.votes - a.votes || a.id - b.id);
 
-      if (total === 0) {
-        top3Div.innerHTML = '<p style="font-size:2em">Chưa có ai vote hết á huhu 😭</p>';
-      } else {
-        sorted.slice(0, 3).forEach((item, i) => {
-          const trophy = ['🏆', '🥈', '🥉'][i];
-          top3Div.innerHTML += `
-            <div class="result-card" style="background: linear-gradient(135deg, ${item.color}dd, ${item.color})">
-              <div class="rank">${trophy}</div>
-              <div class="emoji">${item.emoji}</div>
-              <div class="info">
-                <h3>${item.text}</h3>
-                <p>${item.votes} lượt (${item.percent.toFixed(0)}%)</p>
-                <div class="progress">
-                  <div class="progress-bar" style="width:${item.percent.toFixed(0)}%"></div>
-                </div>
-              </div>
-            </div>
-          `;
-        });
-      }
+      rankingDiv.innerHTML = sorted.map((s,i) => `
+        <div class="result-item" style="background:linear-gradient(135deg, ${s.color}dd, ${s.color})">
+          <div class="rank">${i<3 ? ['1st','2nd','3rd'][i] : (i+1)+'th'}</div>
+          <div style="flex:1;text-align:left">
+            <div style="font-size:1.6em;font-weight:700">${s.name}</div>
+            <div class="nickname" style="font-size:0.9em;margin:5px 0">${s.nickname}</div>
+            <div>${s.votes} lượt (${s.percent.toFixed(0)}%)</div>
+            <div class="progress"><div class="bar" style="width:${s.percent}%"></div></div>
+          </div>
+        </div>
+      `).join('');
 
-      confetti({
-        particleCount: 300,
-        spread: 120,
-        origin: { y: 0.6 }
-      });
+      confetti({particleCount:500, spread:120});
     }
 
-    const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('admin') === '123') {
-  document.getElementById('resetBtn').style.display = 'block';
-  document.getElementById('resetBtn').onclick = function() {
-    if (confirm('Bạn chắc chắn muốn RESET toàn bộ poll không? Tất cả vote sẽ mất đó nha!')) {
-      pollRef.set({
-        endTime: Date.now() + duration * 1000,
-        votes: {}
-      }).then(() => {
-        alert('Reset thành công! Cả lớp refresh lại để vote mới nào!');
-        location.reload();
-      });
+    // Reset cho giáo viên
+    if (new URLSearchParams(location.search).get('admin')==='123') {
+      document.getElementById('resetBtn').style.display='block';
+      document.getElementById('resetBtn').onclick = () => {
+        if(confirm('Reset toàn bộ vote và thời gian?')) {
+          pollRef.set({endTime: Date.now()+duration*1000, votes:{}});
+          alert('Đã reset! Cả lớp refresh để vote lại nha!');
+        }
+      };
     }
-  };
-}
+
+    // Khởi tạo thời gian nếu chưa có
+    endTimeRef.once('value').then(s => {
+      if(!s.val()) endTimeRef.set(Date.now() + duration*1000);
+    });
   </script>
 </body>
 </html>
