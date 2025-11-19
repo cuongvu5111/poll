@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poll Siêu Năng Lực Ngộ Nghĩnh ✨</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.8.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.8.2/firebase-database-compat.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Fredoka', cursive;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+    }
+    .container {
+      max-width: 900px;
+      margin: 20px;
+      background: white;
+      border-radius: 30px;
+      padding: 30px 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    h1 {
+      font-size: 3em;
+      margin: 0 0 20px;
+      color: #ff6b6b;
+      text-shadow: 3px 3px 0px #ffb6c6;
+    }
+    #timer {
+      font-size: 2.8em;
+      font-weight: 700;
+      margin: 20px 0;
+      background: #fff0f0;
+      border-radius: 20px;
+      padding: 15px;
+      display: inline-block;
+      transition: all 0.5s;
+    }
+    #timer.urgent {
+      color: #ff4757;
+      animation: blink 1s infinite;
+      transform: scale(1.1);
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+    .option {
+      background: #fff;
+      border-radius: 25px;
+      padding: 30px 20px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      font-weight: 600;
+      font-size: 1.4em;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .option:hover {
+      transform: translateY(-15px) scale(1.05);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    .option.selected {
+      transform: scale(1.15);
+      box-shadow: 0 0 30px #ffd700, 0 0 60px #ff0;
+      animation: pulse 2s infinite;
+    }
+    .option.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      filter: grayscale(80%);
+    }
+    .emoji {
+      font-size: 5em;
+      display: block;
+      margin-bottom: 15px;
+    }
+    #message {
+      font-size: 1.8em;
+      margin: 30px 0;
+      min-height: 60px;
+    }
+    .result-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 25px;
+      padding: 30px;
+      margin: 25px auto;
+      max-width: 700px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      animation: slideUp 0.8s ease;
+    }
+    .rank {
+      font-size: 6em;
+      margin-right: 30px;
+    }
+    .result-card .emoji {
+      font-size: 4.5em;
+      margin: 0 20px;
+    }
+    .info h3 {
+      font-size: 2em;
+      margin: 0 0 10px;
+    }
+    .progress {
+      width: 100%;
+      height: 40px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 15px;
+    }
+    .progress-bar {
+      height: 100%;
+      border-radius: 20px;
+      transition: width 1.5s ease;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,215,0,0.8); }
+      70% { box-shadow: 0 0 0 30px rgba(255,215,0,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,215,0,0); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    #full-results {
+      margin-top: 50px;
+      font-size: 1.3em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌟 BẠN MUỐN CÓ SIÊU NĂNG LỰC NÀO NHẤT?🌟</h1>
+     <button id="resetBtn" style="display:none; background:#ff4757; color:white; border:none; padding:15px 30px; font-size:1.3em; border-radius:15px; cursor:pointer; margin:10px;">
+    RESET TOÀN BỘ POLL (chỉ cô/thầy bấm)
+  </button>
+    <div id="timer">Thời gian còn lại: <span id="time">02:00</span></div>
+    <div id="message"></div>
+    <div id="poll" class="options"></div>
+    <div id="results" style="display:none;">
+      <h2 style="font-size:3em;color:#ffd700;text-shadow:3px 3px #ff69b4">🏆 TOP 3 SIÊU NĂNG LỰC 🏆</h2>
+      <div id="top3"></div>
+      <p>Tổng cộng: <span id="total-votes">0</span> lượt vote</p>
+    </div>
+  </div>
+
+  <script>
+    // === ĐIỀU CHỈNH Ở ĐÂY - DÁN CONFIG FIREBASE VÀO ĐÂY
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQB47nB58LyMQ1_5DZSCggJK5AhBy-POE",
+      authDomain: "poll-sieu-nang-luc.firebaseapp.com",
+      databaseURL: "https://poll-sieu-nang-luc-default-rtdb.firebaseio.com",
+      projectId: "poll-sieu-nang-luc",
+      storageBucket: "poll-sieu-nang-luc.firebasestorage.app",
+      messagingSenderId: "743139357944",
+      appId: "1:743139357944:web:92fe5cfc03d4414e5e370d",
+      measurementId: "G-JQWYJL7GWL"
+    };
+    // ==========================================================
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const pollRef = db.ref('poll-sieu-nang-luc-2025'); // có thể đổi tên để tạo poll mới
+
+    const votesRef = pollRef.child('votes');
+    const endTimeRef = pollRef.child('endTime');
+
+    const duration = 10; // 120 giây = 2 phút (bạn có thể đổi thành 300 nếu muốn 5 phút)
+
+    const options = [
+      { id: 0, text: "Bay lượn tự do", emoji: "🦅", color: "#87CEEB" },
+      { id: 1, text: "Tàng hình", emoji: "👻", color: "#C71585" },
+      { id: 2, text: "Đọc suy nghĩ", emoji: "🧠", color: "#FFB6C1" },
+      { id: 3, text: "Siêu sức mạnh", emoji: "💪", color: "#FF4500" },
+      { id: 4, text: "Du hành thời gian", emoji: "⏳", color: "#FFD700" },
+      { id: 5, text: "Nói chuyện với động vật", emoji: "🐾", color: "#98FB98" }
+    ];
+
+    let endTime = null;
+    let votes = {};
+    let timer;
+    const pollDiv = document.getElementById('poll');
+    const timeSpan = document.getElementById('time');
+    const timerDiv = document.getElementById('timer');
+    const messageDiv = document.getElementById('message');
+    const resultsDiv = document.getElementById('results');
+    const top3Div = document.getElementById('top3');
+    const totalVotesSpan = document.getElementById('total-votes');
+
+    const hasVoted = localStorage.getItem('poll_hasVoted') === 'true';
+    const votedId = localStorage.getItem('poll_votedId');
+
+    // Tạo các ô lựa chọn
+    options.forEach(opt => {
+      const div = document.createElement('div');
+      div.className = 'option';
+      div.dataset.id = opt.id;
+      div.style.background = opt.color;
+      div.innerHTML = `<span class="emoji">${opt.emoji}</span><div>${opt.text}</div>`;
+      div.onclick = () => vote(opt.id);
+      pollDiv.appendChild(div);
+    });
+
+    // Nếu đã vote rồi thì highlight ô đã chọn
+    if (hasVoted && votedId !== null) {
+      document.querySelectorAll('.option').forEach(d => {
+        if (d.dataset.id == votedId) d.classList.add('selected');
+        else d.classList.add('disabled');
+      });
+      messageDiv.innerHTML = '❤️ Bạn đã vote rồi nha! Chờ kết quả thui nào~ ❤️';
+    }
+
+    // Lấy endTime (nếu chưa có thì tạo)
+    endTimeRef.once('value').then(snap => {
+      if (!snap.val()) {
+        endTimeRef.set(Date.now() + duration * 1000);
+      }
+    });
+
+    // Theo dõi thời gian kết thúc & votes realtime
+    endTimeRef.on('value', snap => {
+      endTime = snap.val();
+      if (endTime && Date.now() > endTime) {
+        showResults();
+      } else {
+        startTimer();
+      }
+    });
+
+    votesRef.on('value', snap => {
+      const data = snap.val() || {};
+      options.forEach(opt => {
+        votes[opt.id] = data[opt.id] || 0;
+      });
+      if (Date.now() > endTime) showResults();
+    });
+
+    function vote(id) {
+      if (hasVoted || !endTime || Date.now() > endTime) {
+        return;
+      }
+
+      votesRef.child(id).transaction(val => (val || 0) + 1);
+      localStorage.setItem('poll_hasVoted', 'true');
+      localStorage.setItem('poll_votedId', id);
+
+      messageDiv.innerHTML = '🎉 Vote thành công! Siêu đỉnh luôn áaaa 🎉';
+      confetti({ particleCount: 150, spread: 100 });
+
+      document.querySelectorAll('.option').forEach(d => {
+        if (d.dataset.id == id) {
+          d.classList.add('selected');
+        } else {
+          d.classList.add('disabled');
+        }
+      });
+    }
+
+    function startTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        if (!endTime) return;
+        const remaining = Math.max(0, endTime - Date.now()) / 1000;
+        const m = String(Math.floor(remaining / 60)).padStart(2, '0');
+        const s = String(Math.floor(remaining % 60)).padStart(2, '0');
+        timeSpan.textContent = `${m}:${s}`;
+
+        if (remaining <= 0) {
+          clearInterval(timer);
+          showResults();
+        } else if (remaining < 11) {
+          timerDiv.classList.add('urgent');
+        } else {
+          timerDiv.classList.remove('urgent');
+        }
+      }, 500);
+    }
+
+    function showResults() {
+      clearInterval(timer);
+      pollDiv.style.display = 'none';
+      timerDiv.style.display = 'none';
+      messageDiv.style.display = 'none';
+      resultsDiv.style.display = 'block';
+
+      const total = Object.values(votes).reduce((a, b) => a + b, 0);
+      totalVotesSpan.textContent = total;
+
+      const sorted = options.map(opt => ({
+        ...opt,
+        votes: votes[opt.id] || 0,
+        percent: total > 0 ? (votes[opt.id] || 0) / total * 100 : 0
+      })).sort((a, b) => b.votes - a.votes || a.id - b.id);
+
+      if (total === 0) {
+        top3Div.innerHTML = '<p style="font-size:2em">Chưa có ai vote hết á huhu 😭</p>';
+      } else {
+        sorted.slice(0, 3).forEach((item, i) => {
+          const trophy = ['🏆', '🥈', '🥉'][i];
+          top3Div.innerHTML += `
+            <div class="result-card" style="background: linear-gradient(135deg, ${item.color}dd, ${item.color})">
+              <div class="rank">${trophy}</div>
+              <div class="emoji">${item.emoji}</div>
+              <div class="info">
+                <h3>${item.text}</h3>
+                <p>${item.votes} lượt (${item.percent.toFixed(0)}%)</p>
+                <div class="progress">
+                  <div class="progress-bar" style="width:${item.percent.toFixed(0)}%"></div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      confetti({
+        particleCount: 300,
+        spread: 120,
+        origin: { y: 0.6 }
+      });
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('admin') === '123') {
+  document.getElementById('resetBtn').style.display = 'block';
+  document.getElementById('resetBtn').onclick = function() {
+    if (confirm('Bạn chắc chắn muốn RESET toàn bộ poll không? Tất cả vote sẽ mất đó nha!')) {
+      pollRef.set({
+        endTime: Date.now() + duration * 1000,
+        votes: {}
+      }).then(() => {
+        alert('Reset thành công! Cả lớp refresh lại để vote mới nào!');
+        location.reload();
+      });
+    }
+  };
+}
+  </script>
+</body>
+</html>
