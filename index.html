@@ -352,8 +352,11 @@
       const endTime = snap.val();
       if (endTime && endTime < Date.now()) {
         isVotingActive = false;
-        // Hiện nút xem kết quả cho học sinh
-        document.getElementById('viewResultsBtn').style.display = 'block';
+        // Tự động hiện kết quả ngay cho tất cả học sinh
+        votesRef.once('value').then(voteSnap => {
+          votes = voteSnap.val() || {};
+          showResults();
+        });
       } else {
         isVotingActive = true;
         document.getElementById('viewResultsBtn').style.display = 'none';
