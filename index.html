@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ai Là Siêu Anh Hùng Lớp Mình?</title>
+  <title>Bình Chọn Sản Phẩm Đẹp</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
@@ -89,12 +89,7 @@
       animation: pulse 1.5s infinite;
     }
     .option.disabled { opacity: 0.35; pointer-events: none; filter: grayscale(90%); }
-    .nickname {
-      font-size: 0.75em;
-      opacity: 0.95;
-      margin-top: 6px;
-      font-weight: 600;
-    }
+
     #message {
       font-size: 1.6em;
       min-height: 60px;
@@ -169,11 +164,7 @@
       margin: 10px 0 5px;
       color: #2d3436;
     }
-    .podium-nickname {
-      font-size: 1.1em;
-      color: #636e72;
-      margin-bottom: 10px;
-    }
+
     .podium-votes {
       font-size: 1.5em;
       font-weight: 700;
@@ -233,8 +224,8 @@
 </head>
 <body>
   <div class="container">
-    <h1>AI LÀ SIÊU ANH HÙNG LỚP MÌNH?</h1>
-    <div class="subtitle">Bấm vào tên bạn mà bạn tin có siêu năng lực bí mật!</div>
+    <h1>🎨 BÌNH CHỌN SẢN PHẨM ĐẸP 🎨</h1>
+    <div class="subtitle">Chọn sản phẩm mà bạn yêu thích nhất!</div>
 
     <div id="adminControls" class="admin-controls" style="display:none;">
       <button id="startBtn" class="admin-btn success">🚀 BẮT ĐẦU VOTE</button>
@@ -247,7 +238,7 @@
       <div style="background:white;padding:40px;border-radius:30px;text-align:center;max-width:500px;position:relative;">
         <button id="closeQR" style="position:absolute;top:15px;right:15px;background:#d63031;color:white;border:none;width:40px;height:40px;border-radius:50%;font-size:1.5em;cursor:pointer;font-weight:bold;">×</button>
         <h2 style="color:#6c5ce7;font-size:2.5em;margin-bottom:20px">📱 Quét Mã QR</h2>
-        <p style="color:#e84393;font-size:1.3em;margin-bottom:20px">Để học sinh vote ngay!</p>
+        <p style="color:#e84393;font-size:1.3em;margin-bottom:20px">Để mọi người vote ngay!</p>
         <div style="background:#f0f0f0;padding:20px;border-radius:20px;margin:20px 0;">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://capable-melomakarona-c6f045.netlify.app/" style="width:300px;height:300px;display:block;">
         </div>
@@ -257,12 +248,12 @@
       </div>
     </div>
 
-    <div id="message">Chọn ngay một người nào!</div>
+    <div id="message">Chọn sản phẩm yêu thích của bạn!</div>
 
     <div id="poll" class="options"></div>
 
     <div id="results" style="display:none;">
-      <h2 style="font-size:3em;color:#f1c40f;margin:30px 0;text-shadow:3px 3px 0 #e17055">🏆 TOP 3 SIÊU ANH HÙNG 🏆</h2>
+      <h2 style="font-size:3em;color:#f1c40f;margin:30px 0;text-shadow:3px 3px 0 #e17055">🏆 TOP 3 SẢN PHẨM YÊU THÍCH 🏆</h2>
       <div id="top3"></div>
       
       <h2 style="font-size:2.5em;color:#6c5ce7;margin:50px 0 30px">📊 BẢNG XẾP HẠNG ĐẦY ĐỦ</h2>
@@ -288,38 +279,38 @@
     const endTimeRef = pollRef.child('endTime');
     const duration = 120; // 2 phút
 
-    // 30 học sinh – TÊN TRƯỚC, BIỆT DANH SAU
+    // 30 sản phẩm
     const students = [
-      {id:0,  name:"Minh Khang",    nickname:"Cậu Bé Tia Chớp",      color:"#74b9ff"},
-      {id:1,  name:"Bảo Châu",     nickname:"Phù Thủy Phép Thuật",   color:"#fd79a8"},
-      {id:2,  name:"Phương Nam",   nickname:"Siêu Nhân Mặt Trời",    color:"#f1c40f"},
-      {id:3,  name:"Ngọc Ánh",     nickname:"Công Chúa Băng Giá",    color:"#81ecec"},
-      {id:4,  name:"Tuấn Kiệt",    nickname:"Siêu Nhân Cơ Bắp",      color:"#e17055"},
-      {id:5,  name:"Hải Đăng",     nickname:"Người Dẫn Đường",       color:"#00b894"},
-      {id:6,  name:"Thảo Vy",      nickname:"Nữ Hoàng Hoa",          color:"#ff7675"},
-      {id:7,  name:"Khánh Linh",   nickname:"Thiên Thần Nhỏ",        color:"#a29bfe"},
-      {id:8,  name:"Trí Đức",      nickname:"Thần Đồng Não Bộ",      color:"#6c5ce7"},
-      {id:9,  name:"Yến Nhi",      nickname:"Phượng Hoàng Lửa",      color:"#fdcb6e"},
-      {id:10, name:"Hoàng Long",   nickname:"Rồng Vàng Bay",         color:"#e84393"},
-      {id:11, name:"Mai Anh",      nickname:"Bướm Tiên Nữ",          color:"#fd79a8"},
-      {id:12, name:"Đức Huy",      nickname:"Hiệp Sĩ Ánh Sáng",      color:"#0984e3"},
-      {id:13, name:"Thùy Linh",    nickname:"Tiên Nữ Gió",           color:"#00cec9"},
-      {id:14, name:"Phong",        nickname:"Thần Gió Lốc",          color:"#636e72"},
-      {id:15, name:"Hồng Ngọc",    nickname:"Nữ Hoàng Lửa",          color:"#d63031"},
-      {id:16, name:"Quốc Bảo",     nickname:"Người Bảo Vệ Lớp",      color:"#2d3436"},
-      {id:17, name:"Kim Ngân",     nickname:"Công Chúa Bạc",         color:"#b2bec3"},
-      {id:18, name:"Việt Hoàng",   nickname:"Vua Chiến Binh",        color:"#e17055"},
-      {id:19, name:"Lan Chi",      nickname:"Hoa Lan Tiên Tử",       color:"#ff7675"},
-      {id:20, name:"Minh Tuấn",    nickname:"Tia Sét Siêu Tốc",      color:"#74b9ff"},
-      {id:21, name:"Thảo Nguyên",  nickname:"Nữ Hoàng Thảo Nguyên",  color:"#00b894"},
-      {id:22, name:"Hà My",       nickname:"Nàng Tiên Cá",          color:"#81ecec"},
-      {id:23, name:"Trọng Nghĩa",  nickname:"Hiệp Sĩ Công Lý",       color:"#2ecc71"},
-      {id:24, name:"Diệu Linh",    nickname:"Tiên Nữ Ánh Trăng",     color:"#a29bfe"},
-      {id:25, name:"Khánh An",     nickname:"Thiên Thần Bình Yên",   color:"#fdcb6e"},
-      {id:26, name:"Tùng Lâm",     nickname:"Người Gác Rừng",        color:"#55a3ff"},
-      {id:27, name:"Bích Thủy",    nickname:"Nàng Tiên Nước",        color:"#00cec9"},
-      {id:28, name:"Nhật Minh",    nickname:"Mặt Trời Bé Nhỏ",       color:"#f1cCounts40f"},
-      {id:29, name:"Cát Tường",    nickname:"Phù Thủy May Mắn",      color:"#e84393"}
+      {id: 0,  name: "Hoàng Hữu An",          icon: "🎨",  color: "#74b9ff"},
+      {id: 1,  name: "Bùi Phương Anh (lớn)",  icon: "✨",  color: "#fd79a8"},
+      {id: 2,  name: "Bùi Phương Anh (bé)",   icon: "🌟",  color: "#f1c40f"},
+      {id: 3,  name: "Bùi Thảo Anh",          icon: "💎",  color: "#81ecec"},
+      {id: 4,  name: "Bùi Trần Tuấn Anh",     icon: "🎭",  color: "#e17055"},
+      {id: 5,  name: "Bùi Tiến Bình",         icon: "🎪",  color: "#00b894"},
+      {id: 6,  name: "Hoàng Thảo Chi",        icon: "🌸",  color: "#ff7675"},
+      {id: 7,  name: "Nguyễn Dương Thùy Dung",icon: "🦋",  color: "#a29bfe"},
+      {id: 8,  name: "Nguyễn Thị Bích Duyên", icon: "🌺",  color: "#6c5ce7"},
+      {id: 9,  name: "Vũ Thị Phương Duyên",   icon: "🔥",  color: "#fdcb6e"},
+      {id: 10, name: "Trần Văn Đạt",          icon: "🐉",  color: "#e84393"},
+      {id: 11, name: "Nguyễn Văn Đức",        icon: "🎯",  color: "#fd79a8"},
+      {id: 12, name: "Vũ Gia Hân",            icon: "⚡",  color: "#0984e3"},
+      {id: 13, name: "Bùi Phương Linh",       icon: "🌊",  color: "#00cec9"},
+      {id: 14, name: "Nguyễn Hoàng Minh",     icon: "🌪️",  color: "#636e72"},
+      {id: 15, name: "Bùi Thị Trà My",        icon: "🌹",  color: "#d63031"},
+      {id: 16, name: "Vũ Hà My",              icon: "🛡️",  color: "#2d3436"},
+      {id: 17, name: "Bùi Bảo Nam",           icon: "🎁",  color: "#b2bec3"},
+      {id: 18, name: "Bùi Thanh Nghị",        icon: "⚔️",  color: "#e17055"},
+      {id: 19, name: "Ngô Minh Ngọc",         icon: "🌷",  color: "#ff7675"},
+      {id: 20, name: "Nguyễn Yến Nhi",        icon: "💫",  color: "#74b9ff"},
+      {id: 21, name: "Vương Thảo Nhi",        icon: "🌿",  color: "#00b894"},
+      {id: 22, name: "Bùi Tuấn Phong",        icon: "🌊",  color: "#81ecec"},
+      {id: 23, name: "Nguyễn Nam Sơn",        icon: "⚖️",  color: "#2ecc71"},
+      {id: 24, name: "Hoàng Nhật Thành",      icon: "🌙",  color: "#a29bfe"},
+      {id: 25, name: "Bùi Thị Thanh Thảo",    icon: "☮️",  color: "#fdcb6e"},
+      {id: 26, name: "Bùi Thanh Thủy",        icon: "🌲",  color: "#55a3ff"},
+      {id: 27, name: "Nguyễn Thị Huyền Trang",icon: "💧",  color: "#00cec9"},
+      {id: 28, name: "Trần Ngọc Trang",       icon: "☀️",  color: "#f1c40f"},
+      {id: 29, name: "Hoàng Mỹ Uyên",         icon: "🍀",  color: "#e84393"}
     ];
 
     let isVotingActive = true;
@@ -329,15 +320,15 @@
     const rankingDiv = document.getElementById('ranking');
     const totalSpan = document.getElementById('total-votes');
 
-    // Tạo các ô vote: Tên lớn trước – biệt danh nhỏ sau
+    // Tạo các ô vote: Icon và tên sản phẩm
     students.forEach(s => {
       const div = document.createElement('div');
       div.className = 'option';
       div.dataset.id = s.id;
       div.style.background = s.color;
       div.innerHTML = `
+        <div style="font-size:2.5em;margin-bottom:10px">${s.icon}</div>
         <div>${s.name}</div>
-        <div class="nickname">${s.nickname}</div>
       `;
       div.onclick = () => vote(s.id);
       pollDiv.appendChild(div);
@@ -410,10 +401,9 @@
             <div class="podium ${positions[i]}">
               ${i === 0 ? '<div class="crown">👑</div>' : ''}
               <div class="podium-avatar" style="background:${s.color}">
-                ${s.name.charAt(0)}
+                ${s.icon}
               </div>
               <div class="podium-name">${s.name}</div>
-              <div class="podium-nickname">${s.nickname}</div>
               <div class="podium-votes">${s.votes} votes (${s.percent.toFixed(1)}%)</div>
               <div class="podium-base">
                 ${medals[i]}
@@ -428,9 +418,10 @@
         <div class="result-item" style="background:linear-gradient(135deg, ${s.color}dd, ${s.color})">
           <div class="rank">${i+4}th</div>
           <div style="flex:1;text-align:left">
-            <div style="font-size:1.4em;font-weight:700">${s.name}</div>
-            <div class="nickname" style="font-size:0.9em;margin:5px 0;opacity:0.9">${s.nickname}</div>
-            <div style="font-size:1.1em">${s.votes} lượt (${s.percent.toFixed(1)}%)</div>
+            <div style="font-size:1.4em;font-weight:700">
+              <span style="font-size:1.5em;margin-right:10px">${s.icon}</span>${s.name}
+            </div>
+            <div style="font-size:1.1em;margin-top:8px">${s.votes} lượt (${s.percent.toFixed(1)}%)</div>
             <div class="progress"><div class="bar" style="width:${s.percent}%"></div></div>
           </div>
         </div>
@@ -445,11 +436,11 @@
     if (new URLSearchParams(location.search).get('admin')==='123') {
       document.getElementById('adminControls').style.display='flex';
       
-      // Nút BẮT ĐẦU - Mở vote cho học sinh
+      // Nút BẮT ĐẦU - Mở vote
       document.getElementById('startBtn').onclick = () => {
         if(confirm('Bắt đầu vote mới?')) {
           pollRef.update({endTime: Date.now() + (365*24*60*60*1000)}); // Set thời gian xa trong tương lai
-          alert('Đã bắt đầu! Học sinh có thể vote ngay!');
+          alert('Đã bắt đầu! Mọi người có thể vote ngay!');
           location.reload();
         }
       };
