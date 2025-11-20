@@ -250,6 +250,10 @@
 
     <div id="message">Chọn sản phẩm yêu thích của bạn!</div>
 
+    <button id="viewResultsBtn" class="admin-btn" style="background:#f39c12;display:none;margin:20px auto;">
+      📊 XEM KẾT QUẢ
+    </button>
+
     <div id="poll" class="options"></div>
 
     <div id="results" style="display:none;">
@@ -348,13 +352,11 @@
       const endTime = snap.val();
       if (endTime && endTime < Date.now()) {
         isVotingActive = false;
-        // Đợi votes load xong rồi mới hiện kết quả
-        votesRef.once('value').then(voteSnap => {
-          votes = voteSnap.val() || {};
-          showResults();
-        });
+        // Hiện nút xem kết quả cho học sinh
+        document.getElementById('viewResultsBtn').style.display = 'block';
       } else {
         isVotingActive = true;
+        document.getElementById('viewResultsBtn').style.display = 'none';
       }
     });
 
@@ -490,6 +492,14 @@
         if(e.target === qrModal) qrModal.style.display = 'none';
       };
     }
+
+    // Nút xem kết quả cho học sinh
+    document.getElementById('viewResultsBtn').onclick = () => {
+      votesRef.once('value').then(snap => {
+        votes = snap.val() || {};
+        showResults();
+      });
+    };
 
     // Khởi tạo trạng thái vote nếu chưa có
     endTimeRef.once('value').then(s => {
