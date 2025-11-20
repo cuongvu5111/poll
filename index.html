@@ -348,7 +348,11 @@
       const endTime = snap.val();
       if (endTime && endTime < Date.now()) {
         isVotingActive = false;
-        showResults();
+        // Đợi votes load xong rồi mới hiện kết quả
+        votesRef.once('value').then(voteSnap => {
+          votes = voteSnap.val() || {};
+          showResults();
+        });
       } else {
         isVotingActive = true;
       }
@@ -356,6 +360,10 @@
 
     votesRef.on('value', snap => {
       votes = snap.val() || {};
+      // Nếu đang ở trạng thái kết thúc và có votes, cập nhật kết quả
+      if (!isVotingActive && document.getElementById('results').style.display === 'block') {
+        showResults();
+      }
     });
 
     function vote(id) {
@@ -448,9 +456,14 @@
       // Nút KẾT THÚC - Dừng vote ngay lập tức và hiện kết quả
       document.getElementById('endBtn').onclick = () => {
         if(confirm('Kết thúc vote ngay và hiển thị kết quả?')) {
-          pollRef.update({endTime: Date.now() - 1000});
-          alert('Đã kết thúc! Đang hiển thị kết quả...');
-          setTimeout(() => location.reload(), 500);
+          pollRef.update({endTime: Date.now() - 1000}).then(() => {
+            isVotingActive = false;
+            // Load votes và hiện kết quả ngay
+            votesRef.once('value').then(snap => {
+              votes = snap.val() || {};
+              showResults();
+            });
+          });
         }
       };
       
