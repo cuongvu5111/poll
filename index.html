@@ -61,18 +61,7 @@
     .admin-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
     .admin-btn.danger { background: #d63031; }
     .admin-btn.success { background: #00b894; }
-    #timer {
-      font-size: 5em;
-      font-weight: 800;
-      color: #d63031;
-      background: #fff0f0;
-      padding: 20px;
-      border-radius: 25px;
-      margin: 20px 0;
-      display: inline-block;
-    }
-    #timer.urgent { animation: blink 0.8s infinite; }
-    @keyframes blink { 50% { opacity: 0.5; } }
+
 
     .options { 
       display: grid;
@@ -251,9 +240,23 @@
       <button id="startBtn" class="admin-btn success">🚀 BẮT ĐẦU VOTE</button>
       <button id="endBtn" class="admin-btn danger">⏹️ KẾT THÚC NGAY</button>
       <button id="resetBtn" class="admin-btn">🔄 RESET TOÀN BỘ</button>
+      <button id="qrBtn" class="admin-btn" style="background:#e84393">📱 HIỆN QR CODE</button>
     </div>
 
-    <div id="timer">02:00</div>
+    <div id="qrModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;">
+      <div style="background:white;padding:40px;border-radius:30px;text-align:center;max-width:500px;position:relative;">
+        <button id="closeQR" style="position:absolute;top:15px;right:15px;background:#d63031;color:white;border:none;width:40px;height:40px;border-radius:50%;font-size:1.5em;cursor:pointer;font-weight:bold;">×</button>
+        <h2 style="color:#6c5ce7;font-size:2.5em;margin-bottom:20px">📱 Quét Mã QR</h2>
+        <p style="color:#e84393;font-size:1.3em;margin-bottom:20px">Để học sinh vote ngay!</p>
+        <div style="background:#f0f0f0;padding:20px;border-radius:20px;margin:20px 0;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://capable-melomakarona-c6f045.netlify.app/" style="width:300px;height:300px;display:block;">
+        </div>
+        <div style="background:#fff3cd;padding:15px;border-radius:15px;word-break:break-all;font-size:1em;color:#333;margin-top:20px;">
+          https://capable-melomakarona-c6f045.netlify.app/
+        </div>
+      </div>
+    </div>
+
     <div id="message">Chọn ngay một người nào!</div>
 
     <div id="poll" class="options"></div>
@@ -319,10 +322,9 @@
       {id:29, name:"Cát Tường",    nickname:"Phù Thủy May Mắn",      color:"#e84393"}
     ];
 
-    let endTime = null;
+    let isVotingActive = true;
     let votes = {};
     const pollDiv = document.getElementById('poll');
-    const timerDiv = document.getElementById('timer');
     const messageDiv = document.getElementById('message');
     const rankingDiv = document.getElementById('ranking');
     const totalSpan = document.getElementById('total-votes');
@@ -352,18 +354,21 @@
     }
 
     endTimeRef.on('value', snap => {
-      endTime = snap.val();
-      if (endTime && Date.now() > endTime) showResults();
-      else updateTimer();
+      const endTime = snap.val();
+      if (endTime && endTime < Date.now()) {
+        isVotingActive = false;
+        showResults();
+      } else {
+        isVotingActive = true;
+      }
     });
 
     votesRef.on('value', snap => {
       votes = snap.val() || {};
-      if (Date.now() > endTime) showResults();
     });
 
     function vote(id) {
-      if (localStorage.getItem('voted_ten_2025') === 'yes' || (endTime && Date.now() > endTime)) return;
+      if (localStorage.getItem('voted_ten_2025') === 'yes' || !isVotingActive) return;
 
       votesRef.child(id).transaction(v => (v||0)+1);
       localStorage.setItem('voted_ten_2025','yes');
@@ -379,18 +384,8 @@
       });
     }
 
-    function updateTimer() {
-      const left = Math.max(0, (endTime - Date.now())/1000);
-      const m = String(Math.floor(left/60)).padStart(2,'0');
-      const s = String(Math.floor(left%60)).padStart(2,'0');
-      timerDiv.textContent = `${m}:${s}`;
-      timerDiv.classList.toggle('urgent', left < 11);
-      if (left > 0) setTimeout(updateTimer, 500);
-    }
-
     function showResults() {
       document.getElementById('poll').style.display='none';
-      timerDiv.style.display='none';
       messageDiv.style.display='none';
       document.getElementById('results').style.display='block';
 
@@ -450,10 +445,10 @@
     if (new URLSearchParams(location.search).get('admin')==='123') {
       document.getElementById('adminControls').style.display='flex';
       
-      // Nút BẮT ĐẦU - Khởi động vote mới với thời gian 2 phút
+      // Nút BẮT ĐẦU - Mở vote cho học sinh
       document.getElementById('startBtn').onclick = () => {
-        if(confirm('Bắt đầu vote mới với thời gian 2 phút?')) {
-          pollRef.update({endTime: Date.now() + duration*1000});
+        if(confirm('Bắt đầu vote mới?')) {
+          pollRef.update({endTime: Date.now() + (365*24*60*60*1000)}); // Set thời gian xa trong tương lai
           alert('Đã bắt đầu! Học sinh có thể vote ngay!');
           location.reload();
         }
@@ -470,19 +465,31 @@
       
       // Nút RESET - Xóa toàn bộ dữ liệu và bắt đầu lại
       document.getElementById('resetBtn').onclick = () => {
-        if(confirm('⚠️ RESET toàn bộ vote và thời gian?\n(Tất cả dữ liệu sẽ bị xóa)')) {
-          pollRef.set({endTime: Date.now() + duration*1000, votes:{}});
+        if(confirm('⚠️ RESET toàn bộ vote?\n(Tất cả dữ liệu sẽ bị xóa)')) {
+          pollRef.set({endTime: Date.now() + (365*24*60*60*1000), votes:{}});
           localStorage.removeItem('voted_ten_2025');
           localStorage.removeItem('choice_ten_2025');
           alert('✅ Đã reset! Cả lớp refresh để vote lại!');
           location.reload();
         }
       };
+
+      // Nút HIỆN QR CODE
+      const qrModal = document.getElementById('qrModal');
+      document.getElementById('qrBtn').onclick = () => {
+        qrModal.style.display = 'flex';
+      };
+      document.getElementById('closeQR').onclick = () => {
+        qrModal.style.display = 'none';
+      };
+      qrModal.onclick = (e) => {
+        if(e.target === qrModal) qrModal.style.display = 'none';
+      };
     }
 
-    // Khởi tạo thời gian nếu chưa có
+    // Khởi tạo trạng thái vote nếu chưa có
     endTimeRef.once('value').then(s => {
-      if(!s.val()) endTimeRef.set(Date.now() + duration*1000);
+      if(!s.val()) endTimeRef.set(Date.now() + (365*24*60*60*1000)); // Mặc định mở vote
     });
   </script>
 </body>

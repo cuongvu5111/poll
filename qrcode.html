@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code - Vote Siêu Anh Hùng</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .qr-container {
+      background: white;
+      padding: 40px;
+      border-radius: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+      max-width: 500px;
+    }
+    h1 {
+      font-size: 2.5em;
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      font-size: 1.3em;
+      color: #764ba2;
+      margin-bottom: 30px;
+    }
+    .qr-box {
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      display: inline-block;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .qr-box img {
+      display: block;
+      width: 300px;
+      height: 300px;
+    }
+    .link {
+      margin-top: 25px;
+      padding: 15px;
+      background: #f0f0f0;
+      border-radius: 15px;
+      word-break: break-all;
+      font-size: 1.1em;
+      color: #333;
+    }
+    .instruction {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #555;
+      line-height: 1.6;
+    }
+    .emoji {
+      font-size: 3em;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="qr-container">
+    <div class="emoji">📱✨</div>
+    <h1>Quét Mã QR</h1>
+    <div class="subtitle">Để Vote Siêu Anh Hùng Lớp Mình!</div>
+    
+    <div class="qr-box">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://capable-melomakarona-c6f045.netlify.app/" alt="QR Code">
+    </div>
+    
+    <div class="link">
+      https://capable-melomakarona-c6f045.netlify.app/
+    </div>
+    
+    <div class="instruction">
+      📸 Mở camera điện thoại<br>
+      👉 Quét mã QR phía trên<br>
+      🚀 Bắt đầu vote ngay!
+    </div>
+  </div>
+</body>
+</html>
