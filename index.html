@@ -348,23 +348,41 @@
       messageDiv.innerHTML = `Bạn đã vote cho <b>${students[chosen].name}</b> rồi nha!`;
     }
 
+    // Listener cho endTime - phát hiện khi KẾT THÚC hoặc BẮT ĐẦU
     endTimeRef.on('value', snap => {
       const endTime = snap.val();
       if (endTime && endTime < Date.now()) {
+        // Đã kết thúc - hiện kết quả
         isVotingActive = false;
-        // Tự động hiện kết quả ngay cho tất cả học sinh
         votesRef.once('value').then(voteSnap => {
           votes = voteSnap.val() || {};
           showResults();
         });
       } else {
+        // Đang mở vote - reload trang để reset giao diện
+        if (!isVotingActive) {
+          // Nếu trước đó đã kết thúc, giờ bắt đầu lại -> reload
+          location.reload();
+        }
         isVotingActive = true;
         document.getElementById('viewResultsBtn').style.display = 'none';
       }
     });
 
+    // Listener cho votes - phát hiện khi RESET (votes = null hoặc {})
     votesRef.on('value', snap => {
-      votes = snap.val() || {};
+      const newVotes = snap.val() || {};
+      const voteCount = Object.keys(newVotes).length;
+      
+      // Nếu votes bị xóa (reset) và đang có localStorage -> reload
+      if (voteCount === 0 && localStorage.getItem('voted_ten_2025') === 'yes') {
+        localStorage.removeItem('voted_ten_2025');
+        localStorage.removeItem('choice_ten_2025');
+        location.reload();
+        return;
+      }
+      
+      votes = newVotes;
       // Nếu đang ở trạng thái kết thúc và có votes, cập nhật kết quả
       if (!isVotingActive && document.getElementById('results').style.display === 'block') {
         showResults();
@@ -452,9 +470,10 @@
       // Nút BẮT ĐẦU - Mở vote
       document.getElementById('startBtn').onclick = () => {
         if(confirm('Bắt đầu vote mới?')) {
-          pollRef.update({endTime: Date.now() + (365*24*60*60*1000)}); // Set thời gian xa trong tương lai
-          alert('Đã bắt đầu! Mọi người có thể vote ngay!');
-          location.reload();
+          pollRef.update({endTime: Date.now() + (365*24*60*60*1000)}).then(() => {
+            alert('Đã bắt đầu! Tất cả màn hình sẽ tự động cập nhật!');
+            location.reload();
+          });
         }
       };
       
@@ -475,11 +494,12 @@
       // Nút RESET - Xóa toàn bộ dữ liệu và bắt đầu lại
       document.getElementById('resetBtn').onclick = () => {
         if(confirm('⚠️ RESET toàn bộ vote?\n(Tất cả dữ liệu sẽ bị xóa)')) {
-          pollRef.set({endTime: Date.now() + (365*24*60*60*1000), votes:{}});
-          localStorage.removeItem('voted_ten_2025');
-          localStorage.removeItem('choice_ten_2025');
-          alert('✅ Đã reset! Cả lớp refresh để vote lại!');
-          location.reload();
+          pollRef.set({endTime: Date.now() + (365*24*60*60*1000), votes:{}}).then(() => {
+            localStorage.removeItem('voted_ten_2025');
+            localStorage.removeItem('choice_ten_2025');
+            alert('✅ Đã reset! Tất cả màn hình sẽ tự động cập nhật!');
+            location.reload();
+          });
         }
       };
 
