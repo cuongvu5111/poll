@@ -283,14 +283,38 @@
     const endTimeRef = pollRef.child('endTime');
     const duration = 120; // 2 phút
 
-    // 6 nhóm
+    // 30 sản phẩm
     const students = [
-      {id: 0, name: "Nhóm 1", icon: "1️⃣", color: "#74b9ff"},
-      {id: 1, name: "Nhóm 2", icon: "2️⃣", color: "#fd79a8"},
-      {id: 2, name: "Nhóm 3", icon: "3️⃣", color: "#f1c40f"},
-      {id: 3, name: "Nhóm 4", icon: "4️⃣", color: "#00b894"},
-      {id: 4, name: "Nhóm 5", icon: "5️⃣", color: "#e17055"},
-      {id: 5, name: "Nhóm 6", icon: "6️⃣", color: "#a29bfe"}
+      {id: 0,  name: "Hoàng Hữu An",          icon: "🎨",  color: "#74b9ff"},
+      {id: 1,  name: "Bùi Phương Anh (lớn)",  icon: "✨",  color: "#fd79a8"},
+      {id: 2,  name: "Bùi Phương Anh (bé)",   icon: "🌟",  color: "#f1c40f"},
+      {id: 3,  name: "Bùi Thảo Anh",          icon: "💎",  color: "#81ecec"},
+      {id: 4,  name: "Bùi Trần Tuấn Anh",     icon: "🎭",  color: "#e17055"},
+      {id: 5,  name: "Bùi Tiến Bình",         icon: "🎪",  color: "#00b894"},
+      {id: 6,  name: "Hoàng Thảo Chi",        icon: "🌸",  color: "#ff7675"},
+      {id: 7,  name: "Nguyễn Dương Thùy Dung",icon: "🦋",  color: "#a29bfe"},
+      {id: 8,  name: "Nguyễn Thị Bích Duyên", icon: "🌺",  color: "#6c5ce7"},
+      {id: 9,  name: "Vũ Thị Phương Duyên",   icon: "🔥",  color: "#fdcb6e"},
+      {id: 10, name: "Trần Văn Đạt",          icon: "🐉",  color: "#e84393"},
+      {id: 11, name: "Nguyễn Văn Đức",        icon: "🎯",  color: "#fd79a8"},
+      {id: 12, name: "Vũ Gia Hân",            icon: "⚡",  color: "#0984e3"},
+      {id: 13, name: "Bùi Phương Linh",       icon: "🌊",  color: "#00cec9"},
+      {id: 14, name: "Nguyễn Hoàng Minh",     icon: "🌪️",  color: "#636e72"},
+      {id: 15, name: "Bùi Thị Trà My",        icon: "🌹",  color: "#d63031"},
+      {id: 16, name: "Vũ Hà My",              icon: "🛡️",  color: "#2d3436"},
+      {id: 17, name: "Bùi Bảo Nam",           icon: "🎁",  color: "#b2bec3"},
+      {id: 18, name: "Bùi Thanh Nghị",        icon: "⚔️",  color: "#e17055"},
+      {id: 19, name: "Ngô Minh Ngọc",         icon: "🌷",  color: "#ff7675"},
+      {id: 20, name: "Nguyễn Yến Nhi",        icon: "💫",  color: "#74b9ff"},
+      {id: 21, name: "Vương Thảo Nhi",        icon: "🌿",  color: "#00b894"},
+      {id: 22, name: "Bùi Tuấn Phong",        icon: "🌊",  color: "#81ecec"},
+      {id: 23, name: "Nguyễn Nam Sơn",        icon: "⚖️",  color: "#2ecc71"},
+      {id: 24, name: "Hoàng Nhật Thành",      icon: "🌙",  color: "#a29bfe"},
+      {id: 25, name: "Bùi Thị Thanh Thảo",    icon: "☮️",  color: "#fdcb6e"},
+      {id: 26, name: "Bùi Thanh Thủy",        icon: "🌲",  color: "#55a3ff"},
+      {id: 27, name: "Nguyễn Thị Huyền Trang",icon: "💧",  color: "#00cec9"},
+      {id: 28, name: "Trần Ngọc Trang",       icon: "☀️",  color: "#f1c40f"},
+      {id: 29, name: "Hoàng Mỹ Uyên",         icon: "🍀",  color: "#e84393"}
     ];
 
     let isVotingActive = true;
